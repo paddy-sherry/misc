@@ -4,7 +4,6 @@ var numbers = [[1,2],[3,4],[5,6,7,8,9,10],[11],[12,13,14]];
 //setting up the var that will hold the flattened arrays.
 var merged = [];
 
-
 /**
 * function flattenArrays 
 * This function takes the arrays as a parameter and flattens them using the js apply function.
