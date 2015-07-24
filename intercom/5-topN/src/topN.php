@@ -6,7 +6,6 @@ ini_set('display_errors', 'On');
 
 class TopN {
 
-
     function __construct() {
         
         $this->filename = "../output.txt";

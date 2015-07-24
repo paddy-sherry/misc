@@ -11,41 +11,51 @@
 
 <h1>Top N</h1>
 
+    <div>
+      This is a function demo of the topN functionality. To view the source code on my github click <a href="https://github.com/paddy-sherry/misc/tree/develop/intercom/5-topN" target="_blank">here</a>
+    </div>
 
-Enter a number N in the box below and click submit. This will go through a file and pull out the N highest numbers that you have requested.
+    <br />
+  
+    <div>  
+        Enter a number N in the box below and click submit. This will go through a file and pull out the N highest numbers that you have requested.
+    </div>
+  
+    <br />
+  
+    <form>
+        Quantity (between 1 and 20):
+        <input type="number" name="quantity" min="1" max="20">
+    </form>
 
-<form>
-  Quantity (between 1 and 20):
-  <input type="number" name="quantity" min="1" max="20">
-</form>
+    <br />
 
-<br />
-
-<input type="button" name="n-submit" id="n-submit" value=""/>
+<button type="button" name="n-submit" id="n-submit" value="">Click Me!</button>
 
 <script type=text/javascript>
 
-
+<!--Get the value entered in the box and post this to the request handler script. This fetches the top N numbers specified and loads them in the #results div-->
 $("#n-submit").click(function() {
-	
-	var n = $("input[name=quantity]").val();
+  
+  var n = $("input[name=quantity]").val();
 
-	$.ajax({ 
-	    url: 'requestHandler.php', 
-	    data: {
-	        function: "readfileInChunks", 
-            n: n
-	    },
-	    type: 'post',
-	  
-	    success: function(output) {
-	        var content = output;
-	        $( "#results" ).empty().append( content );
-	    },
-	    error: function(output) {
-	        $( "#results" ).empty().append('<span class="error">The specified image folder does not exist!</span>');
-	    }
-	});
+   $.ajax({ url: 'requestHandler.php', 
+    data: {
+      function: "readfileInChunks", 
+        n: n
+    },
+    type: 'post',
+    beforeSend: function() {
+        $('#results').html('<img src="../processing.gif" />');
+    },
+    success: function(output) {
+        var content = output;
+        $( "#results" ).empty().append( content );
+    },
+    error: function(output) {
+      $( "#results" ).empty().append('Error');
+    }
+  });
 });
      
 </script>
