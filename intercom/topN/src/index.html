@@ -1,0 +1,67 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Top N</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+<body>
+
+<h1>Top N</h1>
+
+    <div>
+      This is a function demo of the topN functionality. To view the source code on my github click <a href="https://github.com/paddy-sherry/misc/tree/develop/intercom/5-topN" target="_blank">here</a>
+    </div>
+
+    <br />
+  
+    <div>  
+        Enter a number N in the box below and click submit. This will go through a file and pull out the N highest numbers that you have requested.
+    </div>
+  
+    <br />
+  
+    <form>
+        Quantity (between 1 and 20):
+        <input type="number" name="quantity" min="1" max="20">
+    </form>
+
+    <br />
+
+<button type="button" name="n-submit" id="n-submit" value="">Click Me!</button>
+
+<script type=text/javascript>
+
+<!--Get the value entered in the box and post this to the request handler script. This fetches the top N numbers specified and loads them in the #results div-->
+$("#n-submit").click(function() {
+  
+  var n = $("input[name=quantity]").val();
+
+   $.ajax({ url: 'requestHandler.php', 
+    data: {
+      function: "readfileInChunks", 
+        n: n
+    },
+    type: 'post',
+    beforeSend: function() {
+        $('#results').html('<img src="../processing.gif" />');
+    },
+    success: function(output) {
+        var content = output;
+        $( "#results" ).empty().append( content );
+    },
+    error: function(output) {
+      $( "#results" ).empty().append('Error');
+    }
+  });
+});
+     
+</script>
+
+<div id="results"></div>
+
+</body>
+
+</html>
