@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Top N</title>
+
+<script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+</head>
+
+<body>
+
+<h1>Top N</h1>
+
+
+Enter a number N in the box below and click submit. This will go through a file and pull out the N highest numbers that you have requested.
+
+<form>
+  Quantity (between 1 and 20):
+  <input type="number" name="quantity" min="1" max="20">
+</form>
+
+<br />
+
+<input type="button" name="n-submit" id="n-submit" value=""/>
+
+<script type=text/javascript>
+
+
+$("#n-submit").click(function() {
+	
+	var n = $("input[name=quantity]").val();
+
+	$.ajax({ 
+	    url: 'requestHandler.php', 
+	    data: {
+	        function: "readfileInChunks", 
+            n: n
+	    },
+	    type: 'post',
+	  
+	    success: function(output) {
+	        var content = output;
+	        $( "#results" ).empty().append( content );
+	    },
+	    error: function(output) {
+	        $( "#results" ).empty().append('<span class="error">The specified image folder does not exist!</span>');
+	    }
+	});
+});
+     
+</script>
+
+<div id="results"></div>
+
+</body>
+
+</html>
