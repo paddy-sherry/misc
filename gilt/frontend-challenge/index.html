@@ -1,0 +1,68 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="utf-8" />
+    <title>Secret Santa application</title>
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/2.1.3/jquery.min.js"></script>
+
+    <script>
+       
+        //When DOM loaded we attach click event to button
+        $(document).ready(function() {
+            
+            //after button is clicked we download the data
+            $('.button').click(function(){
+
+                //start ajax request
+                $.ajax({
+                    url: "users.json",
+                    //force to handle it as text
+                    dataType: "text",
+                    success: hello
+                });
+            });
+        });
+
+        function hello(data) {
+         
+            //data downloaded so we call parseJSON function 
+            //and pass downloaded data
+            var json = $.parseJSON(data);
+            
+            //loop over items and print out name in div
+            $.each( json.users, function(key, user) {
+                console.log(json.users);
+                
+                // var random = json.users[Math.floor(Math.random() * json.users.length)];
+                // console.log(random);
+
+              //var fullName = value.name.first + ' ' + value.name.last;            
+          
+              
+
+              //$("#results").append("<div>" + fullName + "</div>")
+            });
+
+        }
+
+    </script>
+
+  </head>
+  <body>
+    <h1>Secret Santa application</h1>
+    <p>Below is a list of the secret santa pairings.</p>
+    <div>
+      <!-- Generated Secret Santa assignments should go here -->
+    
+        <input type="button" value="Get and parse JSON" class="button" />
+        <br />
+        <span id="results"></span>
+
+
+
+    </div>
+
+
+
+  </body>
+</html>
