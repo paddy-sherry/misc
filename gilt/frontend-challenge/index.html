@@ -12,7 +12,6 @@
             
             //after button is clicked we download the data
             $('.button').click(function(){
-
                 //start ajax request
                 $.ajax({
                     url: "users.json",
@@ -29,42 +28,47 @@
             //and pass downloaded data
             var json = $.parseJSON(data);
 
-            var random = shuffle(json.users);
-            console.log(random);
+            var list = new Array();
 
             //loop over items and print out name in div
-            $.each(random, function(key, user) {
-             
-              var fullName = user.name.first + ' ' + user.name.last;  
-                
-              console.log(fullName); 
-                
-             
-              //$("#results").append("<div>" + fullName + "</div>")
+            $.each(json.users, function(key, user) {   
+                var fullName = user.name.first + ' ' + user.name.last;
+                list.push(fullName);
             });
-
+        
+            var pairs = generatePairs(list);
+            renderList(pairs);
         }
 
-        function shuffle(array) {
-
-            var currentIndex = array.length, temporaryValue, randomIndex ;
-
-            // While there remain elements to shuffle...
-            while (0 !== currentIndex) {
-
-              // Pick a remaining element...
-              randomIndex = Math.floor(Math.random() * currentIndex);
-              currentIndex -= 1;
-
-              // And swap it with the current element.
-              temporaryValue = array[currentIndex];
-              array[currentIndex] = array[randomIndex];
-              array[randomIndex] = temporaryValue;
-            }
+       
+        // Returns a randomized object that achieves the "secret santa" effect
+        function generatePairs(names) {
             
-            return array;
+            var randomised = {}, 
+                // Create a copy of the passed array
+                copy = Array.prototype.slice.call(names);
+
+            // Setting the receiver to the last index item to resolve an undesired permutation
+            for (var i = 0, receiver = copy[copy.length-1]; i < names.length; i++ ) {
+                while (receiver === names[i] || !receiver)
+                    // Grab a random member from the array
+                    receiver = copy[Math.floor(Math.random() * copy.length)];
+
+                copy.splice(copy.indexOf(receiver), 1 );
+                randomised[names[i]] = receiver;
+                receiver = null;
+            }
+           
+            return randomised;
         }
 
+        function renderList(pairs) {
+            $.each(pairs, function(key, user) {             
+                $("#results").append("<div>" + key + "is with " + user + "</div>");
+            });
+        }
+
+     
     </script>
 
   </head>
