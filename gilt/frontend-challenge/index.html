@@ -9,7 +9,7 @@
        
         //When DOM loaded we attach click event to button
         $(document).ready(function() {
-            
+ 
             //after button is clicked we download the data
             $('.button').click(function(){
                 //start ajax request
@@ -28,49 +28,82 @@
             //and pass downloaded data
             var json = $.parseJSON(data);
 
-            var list = new Array();
+            createDuplicate(json.users);
 
-            //loop over items and print out name in div
-            $.each(json.users, function(key, user) {   
-                var fullName = user.name.first + ' ' + user.name.last;
-                list.push(fullName);
-            });
+            // var list = new Array();
+
+            // //loop over items and print out name in div
+            // $.each(json.users, function(key, user) {   
+            //     var fullName = user.name.first + ' ' + user.name.last;
+            //     list.push(fullName);
+            // });
         
-            var pairs = generatePairs(list);
-            renderList(pairs);
+      
         }
 
-       
-        // Returns a randomized object that achieves the "secret santa" effect
-        function generatePairs(names) {
-            
-            var randomised = {}, 
-                // Create a copy of the passed array
-                copy = Array.prototype.slice.call(names);
+        function shuffle(array) {
+            var currentIndex = array.length, temporaryValue, randomIndex ;
 
-            // Setting the receiver to the last index item to resolve an undesired permutation
-            for (var i = 0, receiver = copy[copy.length-1]; i < names.length; i++ ) {
-                while (receiver === names[i] || !receiver)
-                    // Grab a random member from the array
-                    receiver = copy[Math.floor(Math.random() * copy.length)];
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
 
-                copy.splice(copy.indexOf(receiver), 1 );
-                randomised[names[i]] = receiver;
-                receiver = null;
+                // Pick a remaining element...
+                randomIndex = Math.floor(Math.random() * currentIndex);
+                currentIndex -= 1;
+
+                // And swap it with the current element.
+                temporaryValue = array[currentIndex];
+                array[currentIndex] = array[randomIndex];
+                array[randomIndex] = temporaryValue;
             }
-           
-            return randomised;
+
+            return array;
         }
 
-        function renderList(pairs) {
-            $.each(pairs, function(key, user) {             
-                $("#results").append("<div>" + key + "is with " + user + "</div>");
+        function checkForConflicts(original, shuffled) {
+            if (original.length !== shuffled.length) {
+                return false;
+            }
+              
+            for (var i = 0, length = original.length; i < length; i++) {
+                if (original[i] === shuffled[i]){
+                    console.log('duplicate');
+                    createDuplicate(original);
+                }
+            }
+
+            //return [original, shuffled]; 
+
+            var santaList = new Array();
+            var personList = new Array();
+
+            $.each(original, function(key, user) {
+                var fullName = user.name.first + ' ' + user.name.last;
+                santaList.push(fullName);     
             });
+            $("#santa").empty();
+            $("#santa").append("<li>" + santaList + "</li>");
+
+ 
+            $.each(shuffled, function(key, user) {             
+                var fullName = user.name.first + ' ' + user.name.last;
+                personList.push(fullName);  
+            });
+            $("#person").empty();
+            $("#person").append("<li>" + personList + "</li>"); 
         }
 
-     
+        function createDuplicate(users) {
+            var original = users.slice();
+            var shuffled = shuffle(users);
+        
+            var checkForConflict = checkForConflicts(original, shuffled);
+  
+        }
+ 
     </script>
 
+  <link rel="stylesheet" type="text/css" href="css/style.css">
   </head>
   <body>
     <h1>Secret Santa application</h1>
@@ -80,7 +113,14 @@
     
         <input type="button" value="Get and parse JSON" class="button" />
         <br />
-        <span id="results"></span>
+        <div id="results">
+            <ul id="santa">
+        
+            </ul>
+            <ul id="person">
+        
+            </ul>        
+        </div>
 
 
 
