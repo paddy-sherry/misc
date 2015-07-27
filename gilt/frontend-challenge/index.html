@@ -18,31 +18,51 @@
                     url: "users.json",
                     //force to handle it as text
                     dataType: "text",
-                    success: hello
+                    success: processData
                 });
             });
         });
 
-        function hello(data) {
+        function processData(data) {
          
             //data downloaded so we call parseJSON function 
             //and pass downloaded data
             var json = $.parseJSON(data);
-            
+
+            var random = shuffle(json.users);
+            console.log(random);
+
             //loop over items and print out name in div
-            $.each( json.users, function(key, user) {
-                console.log(json.users);
+            $.each(random, function(key, user) {
+             
+              var fullName = user.name.first + ' ' + user.name.last;  
                 
-                // var random = json.users[Math.floor(Math.random() * json.users.length)];
-                // console.log(random);
-
-              //var fullName = value.name.first + ' ' + value.name.last;            
-          
-              
-
+              console.log(fullName); 
+                
+             
               //$("#results").append("<div>" + fullName + "</div>")
             });
 
+        }
+
+        function shuffle(array) {
+
+            var currentIndex = array.length, temporaryValue, randomIndex ;
+
+            // While there remain elements to shuffle...
+            while (0 !== currentIndex) {
+
+              // Pick a remaining element...
+              randomIndex = Math.floor(Math.random() * currentIndex);
+              currentIndex -= 1;
+
+              // And swap it with the current element.
+              temporaryValue = array[currentIndex];
+              array[currentIndex] = array[randomIndex];
+              array[randomIndex] = temporaryValue;
+            }
+            
+            return array;
         }
 
     </script>
