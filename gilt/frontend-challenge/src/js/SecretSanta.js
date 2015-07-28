@@ -2,7 +2,12 @@
 $(document).ready(function() {
 
     //after button is clicked we download the data
-    $('.button').click(function(){
+    $('#generate').click(function(){
+        
+        $('html, body').animate({
+            scrollTop: $("#santa-results").offset().top
+        }, 2000);
+
         //start ajax request
         $.ajax({
             url: "users.json",
