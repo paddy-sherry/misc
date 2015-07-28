@@ -23,22 +23,18 @@
         });
 
         function processData(data) {
-         
             //data downloaded so we call parseJSON function 
             //and pass downloaded data
             var json = $.parseJSON(data);
 
-            createDuplicate(json.users);
+            createDuplicate(json.users);   
+        }
 
-            // var list = new Array();
-
-            // //loop over items and print out name in div
-            // $.each(json.users, function(key, user) {   
-            //     var fullName = user.name.first + ' ' + user.name.last;
-            //     list.push(fullName);
-            // });
-        
-      
+        function createDuplicate(users) {
+            var original = users.slice();
+            var shuffled = shuffle(users);
+         
+            checkForConflicts(original, shuffled);
         }
 
         function shuffle(array) {
@@ -64,41 +60,35 @@
             if (original.length !== shuffled.length) {
                 return false;
             }
-              
-            for (var i = 0, length = original.length; i < length; i++) {
-                if (original[i] === shuffled[i]){
-                    console.log('duplicate');
+
+            length = original.length;
+            for (var i = 0; i < length; i++) {  
+                if (original[i].guid === shuffled[i].guid) {
                     createDuplicate(original);
                 }
             }
+            
+            renderLists(original, shuffled);  
+        }
 
-            //return [original, shuffled]; 
+        function renderLists(original, shuffled) {
 
             var santaList = new Array();
             var personList = new Array();
-
+            
+            $("#santa").empty();
             $.each(original, function(key, user) {
                 var fullName = user.name.first + ' ' + user.name.last;
-                santaList.push(fullName);     
+                $("#santa").append("<li>" + fullName + "</li>");
             });
-            $("#santa").empty();
-            $("#santa").append("<li>" + santaList + "</li>");
-
- 
+    
+            $("#person").empty();
             $.each(shuffled, function(key, user) {             
                 var fullName = user.name.first + ' ' + user.name.last;
-                personList.push(fullName);  
+                $("#person").append("<li>" + fullName + "</li>");  
             });
-            $("#person").empty();
-            $("#person").append("<li>" + personList + "</li>"); 
-        }
-
-        function createDuplicate(users) {
-            var original = users.slice();
-            var shuffled = shuffle(users);
-        
-            var checkForConflict = checkForConflicts(original, shuffled);
-  
+    
+            return;
         }
  
     </script>
@@ -113,13 +103,12 @@
     
         <input type="button" value="Get and parse JSON" class="button" />
         <br />
-        <div id="results">
-            <ul id="santa">
-        
-            </ul>
-            <ul id="person">
-        
-            </ul>        
+        <div id="santa-results">
+            <ul id="santa"></ul>           
+        </div>
+
+        <div id="person-results">
+            <ul id="person"></ul>  
         </div>
 
 
